@@ -17,4 +17,7 @@ func TestBinary(t *testing.T) {
 	assert.Equal([]int{4, 5, 7}, b.data)
 	b.Insert(6)
 	assert.Equal([]int{4, 5, 7, 6}, b.data)
+
+	assert.Equal(b.Extract(), 4)
+	assert.Equal([]int{5, 7, 6}, b.data)
 }
