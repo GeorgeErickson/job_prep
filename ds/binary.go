@@ -1,4 +1,4 @@
-package heap
+package ds
 
 type MinBinary struct {
 	data []int
