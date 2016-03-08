@@ -1,55 +1,10 @@
 package heap
 
-// DominateFunc returns true if x dominates y
-type DominateFunc func(x, y int) bool
-
-func Min(x, y int) bool {
-	return x <= y
+type MinBinary struct {
+	data []int64
 }
 
-type Binary struct {
-	dominates DominateFunc
-	data      []int
-}
-
-func NewMinBinary() *Binary {
-	return &Binary{
-		dominates: Min,
-		data:      []int{},
-	}
-}
-
-func (b *Binary) Insert(v int) {
-	b.data = append(b.data, v)
-	vIdx := len(b.data) - 1
-	pIdx := vIdx
-
-	for pIdx > 0 {
-		pIdx = pIdx / 2
-
-		if b.dom(pIdx, vIdx) {
-			return
-		}
-		b.swap(pIdx, vIdx)
-		vIdx = pIdx
-	}
-
-}
-
-func (b *Binary) dom(p, j int) bool {
-	// no child exists.
-	if j >= len(b.data) {
-		return true
-	}
-
-	return b.dominates(b.data[p], b.data[j])
-}
-
-func (b *Binary) swap(i, j int) {
-	b.data[i], b.data[j] = b.data[j], b.data[i]
-}
-
-func (b *Binary) parent(i int) int {
+func (b *MinBinary) parentIdx(i int) int {
 	if i == 0 {
 		return -1
 	}
@@ -57,62 +12,66 @@ func (b *Binary) parent(i int) int {
 	return i / 2
 }
 
-func (b *Binary) children(p int) []int {
-	l := p * 2
-	r := l + 1
-
-	var out []int
-	if l < len(b.data) {
-		out = append(out, l)
-	}
-
-	if r < len(b.data) {
-		out = append(out, r)
-	}
-
-	return out
+func (b *MinBinary) lastIdx() int {
+	return len(b.data) - 1
 }
 
-// Remove/Return root and reorg
-func (b *Binary) Extract() int {
+func (b *MinBinary) childIdx(i int) int {
+	return (i * 2) + 1
+}
+
+func (b *MinBinary) swap(i, j int) {
+	b.data[i], b.data[j] = b.data[j], b.data[i]
+}
+
+func (b *MinBinary) Pop() int64 {
 	if len(b.data) == 0 {
-		return 0
+		return -1
 	}
-	dominateVal := b.data[0]
-	b.data[0], b.data = b.data[len(b.data)-1], b.data[:len(b.data)-1]
-	pIdx := 0
+	min := b.data[0]
+	b.swap(0, b.lastIdx())
+	b.data = b.data[:b.lastIdx()]
+	b.bubbleDown(0)
+	return min
+}
 
-	for {
-		lIdx := pIdx * 2
-		rIdx := lIdx + 1
+func (b *MinBinary) bubbleDown(pi int) {
+	ci := b.childIdx(pi)
+	minIdx := pi
 
-		if b.dom(pIdx, lIdx) && b.dom(pIdx, rIdx) {
+	// swap with most dominate child.
+	for i := 0; i <= 1; i++ {
+		if ci+i > b.lastIdx() {
 			break
 		}
 
-		lExists := lIdx < len(b.data)
-		rExists := rIdx < len(b.data)
-
-		if lExists && rExists {
-			l := b.data[lIdx]
-			r := b.data[rIdx]
-
-			if b.dom(l, r) {
-				b.swap(lIdx, pIdx)
-				pIdx = lIdx
-			} else {
-				b.swap(rIdx, pIdx)
-				pIdx = rIdx
-			}
-		} else if lExists {
-			b.swap(lIdx, pIdx)
-			pIdx = lIdx
-		} else if rExists {
-			b.swap(rIdx, pIdx)
-			pIdx = rIdx
+		if b.data[minIdx] > b.data[ci+i] {
+			minIdx = ci + i
 		}
-
 	}
 
-	return dominateVal
+	if pi != minIdx {
+		b.swap(pi, minIdx)
+		b.bubbleDown(minIdx)
+	}
+}
+
+func (b *MinBinary) Insert(x int64) {
+	b.data = append(b.data, x)
+	b.bubbleUp(b.lastIdx())
+}
+
+func (b *MinBinary) bubbleUp(i int) {
+	pi := b.parentIdx(i)
+
+	// at root
+	if pi == -1 {
+		return
+	}
+
+	// child dominates parent
+	if b.data[pi] > b.data[i] {
+		b.swap(pi, i)
+		b.bubbleUp(pi)
+	}
 }
