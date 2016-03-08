@@ -1,7 +1,28 @@
 package heap
 
 type MinBinary struct {
-	data []int64
+	data []int
+}
+
+func NewMinBinary(items ...int) *MinBinary {
+	b := &MinBinary{data: items}
+
+	for i := b.lastIdx(); i >= 0; i-- {
+		b.bubbleDown(i)
+	}
+
+	return b
+}
+
+func (b *MinBinary) Sorted() []int {
+	n := len(b.data)
+
+	out := make([]int, n)
+	for i := 0; i < n; i++ {
+		out[i] = b.Pop()
+	}
+
+	return out
 }
 
 func (b *MinBinary) parentIdx(i int) int {
@@ -24,7 +45,7 @@ func (b *MinBinary) swap(i, j int) {
 	b.data[i], b.data[j] = b.data[j], b.data[i]
 }
 
-func (b *MinBinary) Pop() int64 {
+func (b *MinBinary) Pop() int {
 	if len(b.data) == 0 {
 		return -1
 	}
@@ -56,7 +77,7 @@ func (b *MinBinary) bubbleDown(pi int) {
 	}
 }
 
-func (b *MinBinary) Insert(x int64) {
+func (b *MinBinary) Insert(x int) {
 	b.data = append(b.data, x)
 	b.bubbleUp(b.lastIdx())
 }
