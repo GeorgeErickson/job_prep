@@ -49,6 +49,30 @@ func (b *Binary) swap(i, j int) {
 	b.data[i], b.data[j] = b.data[j], b.data[i]
 }
 
+func (b *Binary) parent(i int) int {
+	if i == 0 {
+		return -1
+	}
+
+	return i / 2
+}
+
+func (b *Binary) children(p int) []int {
+	l := p * 2
+	r := l + 1
+
+	var out []int
+	if l < len(b.data) {
+		out = append(out, l)
+	}
+
+	if r < len(b.data) {
+		out = append(out, r)
+	}
+
+	return out
+}
+
 // Remove/Return root and reorg
 func (b *Binary) Extract() int {
 	if len(b.data) == 0 {
