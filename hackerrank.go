@@ -1,31 +1,18 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"strconv"
-	"strings"
+
+	"gee.io/job_prep/ds"
 )
 
 func main() {
-	s := bufio.NewScanner(os.Stdin)
+	g := ds.NewGraph()
+	g.AddEdges(1, 2, 5)
+	g.AddEdges(2, 1, 5, 3, 4)
+	g.AddEdges(3, 2, 4)
+	g.AddEdges(4, 2, 5, 3)
+	g.AddEdges(5, 4, 1, 2)
 
-	l := ""
-	for i := 0; i < 2; i++ {
-
-		l = s.Text()
-	}
-	fmt.Println(l)
-	sum := 0
-	for _, v := range strings.Fields(l) {
-		i, err := strconv.Atoi(v)
-		if err != nil {
-			panic(err)
-		}
-		sum += i
-	}
-
-	fmt.Println(sum)
-
+	fmt.Println(g.Dot())
 }
