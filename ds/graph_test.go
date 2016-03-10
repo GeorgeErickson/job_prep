@@ -1,10 +1,8 @@
 package ds
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/k0kubun/pp"
 	"github.com/stretchr/testify/require"
 )
 
@@ -43,11 +41,12 @@ func TestGraphAddEdge(t *testing.T) {
 
 func TestGraphBFS(t *testing.T) {
 	g := NewGraph()
+	assert := require.New(t)
 	g.AddEdge(1, 2)
 	g.AddEdge(1, 6)
 	g.AddEdge(1, 5)
 	g.AddEdge(2, 7)
-	g.AddEdge(7, 3)
+	g.AddEdge(7, 11)
 	g.AddEdge(2, 5)
 	g.AddEdge(3, 4)
 	g.AddEdge(4, 5)
@@ -55,9 +54,11 @@ func TestGraphBFS(t *testing.T) {
 
 	r := BFS(g, 1)
 
-	for v := range r.Edge {
-		fmt.Println(v.String())
-	}
-	pth := r.FindPath(1, 9)
-	pp.Print(pth)
+	assert.Equal(r.FindPath(1, 9), []Vertex{1, 5, 4, 3, 9})
+
+	// for v := range r.Edge {
+	// 	fmt.Println(v.String())
+	// }
+	// pth := r.FindPath(1, 9)
+	// pp.Print(pth)
 }

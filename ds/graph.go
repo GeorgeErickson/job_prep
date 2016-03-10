@@ -153,9 +153,10 @@ func (g *Graph) AddEdge(src, dst Vertex, weight ...float64) {
 	}
 
 	g.adj[src].Add(Edge{
-		Src: src,
-		Dst: dst,
-		W:   w,
+		Src:      src,
+		Dst:      dst,
+		W:        w,
+		directed: g.directed,
 	})
 
 	if !g.directed {
@@ -207,7 +208,7 @@ func BFS(g *Graph, start Vertex) *BFSResult {
 	processed := make(map[Vertex]bool)
 
 	q := list.New()
-	q.PushFront(start)
+	q.PushBack(start)
 	// r.Parent[start] = nil
 	discovered[start] = true
 
