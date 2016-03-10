@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"fmt"
 	"os"
+	"sort"
 	"text/template"
 )
 
@@ -15,8 +16,15 @@ type Edge struct {
 	W   float64
 }
 
+func (e *Edge) sortedString() string {
+	nodes := []string{fmt.Sprintf("%v", e.Src), fmt.Sprintf("%v", e.Dst)}
+	sort.Strings(nodes)
+
+	return fmt.Sprintf("%v -- %v", nodes[0], nodes[1])
+}
+
 func (e *Edge) String() string {
-	return fmt.Sprintf("%v -- %v", e.Src, e.Dst)
+	return e.sortedString()
 }
 
 type Graph struct {
@@ -41,7 +49,6 @@ func (g *Graph) RandomV() Vertex {
 }
 
 func (g *Graph) Print() error {
-
 	tstr := `
   graph A {
     node [shape = circle];
@@ -50,13 +57,16 @@ func (g *Graph) Print() error {
       {{$v}}
     {{ end }}
     
-    {{ range .edges -}}
-      {{.Src}} -- {{.Dst}}
+    {{ range $e, $s := .edges -}}
+      {{$e}}
     {{ end }}
   }
   `
+	edges := make(map[string]struct{})
 
-	r := BFS(g, g.RandomV())
+	for e := range g.EdgeIter() {
+		edges[e.String()] = struct{}{}
+	}
 
 	tmpl, err := template.New("test").Parse(tstr)
 	if err != nil {
@@ -65,7 +75,7 @@ func (g *Graph) Print() error {
 
 	return tmpl.Execute(os.Stdout, map[string]interface{}{
 		"adj":   g.adj,
-		"edges": r.Edge,
+		"edges": edges,
 	})
 
 }
