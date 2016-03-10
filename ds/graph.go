@@ -11,9 +11,10 @@ import (
 type Vertex interface{}
 
 type Edge struct {
-	Src Vertex
-	Dst Vertex
-	W   float64
+	Src      Vertex
+	Dst      Vertex
+	W        float64
+	directed bool
 }
 
 func (e *Edge) sortedString() string {
@@ -24,6 +25,9 @@ func (e *Edge) sortedString() string {
 }
 
 func (e *Edge) String() string {
+	if e.directed {
+		return fmt.Sprintf("%v -> %v", e.Src, e.Dst)
+	}
 	return e.sortedString()
 }
 
