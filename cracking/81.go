@@ -101,17 +101,14 @@ func fib2(n int) int {
 	a, b := 0, 1
 	ta, tb := 1, 0
 
-	for n > 1 {
-		if n&1 == 1 {
-			ta, tb = multFib(a, b, ta, tb)
-			n--
-		} else {
-			a, b = multFib(a, b, a, b)
-			n = n / 2
+	for i := n; i > 1; i >>= 1 {
+		if i&1 == 1 {
+			ta, tb = ta*a+tb*b, ta*b+tb*(a+b)
 		}
+		a, b = a*a+b*b, a*b+b*(a+b)
 	}
-	_, out := multFib(a, b, ta, tb)
-	return out
+
+	return ta*b + tb*(a+b)
 }
 
 func fibBig(n int64) *big.Int {
