@@ -31,6 +31,18 @@ func TestSquare33(t *testing.T) {
 	// fib(11)
 }
 
+func BenchmarkFib(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		fib(100000)
+	}
+}
+
+func BenchmarkFib2(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		fib2(100000)
+	}
+}
+
 func TestPowerBySquaring(t *testing.T) {
-	fmt.Println(powerBySquaring(4, 4))
+	fmt.Println(fib2(100000))
 }

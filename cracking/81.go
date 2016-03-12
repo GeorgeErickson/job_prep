@@ -90,32 +90,19 @@ func fib2(n int) int {
 		return n
 	}
 
-	a, b, c := 0, 1, 1
-	tail := ds.MatrixFrom([][]int{
-		{1, 0},
-		{0, 1},
-	})
+	a, b := 0, 1
+	ta, tb := 1, 0
 
 	for n > 1 {
 		if n&1 == 1 {
-			tail = tail.Product(ds.MatrixFrom([][]int{
-				{a, b},
-				{b, c},
-			}))
+			ta, tb = ta*a+tb*b, ta*b+tb*(a+b)
 			n--
 		} else {
-			a1 := (a * a) + (b * b)
-			b1 := (a * b) + (b * c)
-			c1 := (b * b) + (c * c)
-			a, b, c = a1, b1, c1
+			a, b = a*a+b*b, a*b+b*(a+b)
 			n = n / 2
 		}
 	}
-
-	return tail.Product(ds.MatrixFrom([][]int{
-		{a, b},
-		{b, c},
-	})).Get(0, 1)
+	return ta*b + tb*(a+b)
 }
 
 func fib(n int) int {
