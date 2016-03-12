@@ -1,7 +1,6 @@
 package cracking
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -45,10 +44,6 @@ func BenchmarkFib2(b *testing.B) {
 
 func BenchmarkFibBad(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		fibBad(10)
+		fibBig(100)
 	}
-}
-
-func TestPowerBySquaring(t *testing.T) {
-	fmt.Println(fib2(100000))
 }

@@ -1,6 +1,10 @@
 package cracking
 
-import "gee.io/job_prep/ds"
+import (
+	"math/big"
+
+	"gee.io/job_prep/ds"
+)
 
 func powerBySquaring(x, n int) int {
 	out := x
@@ -108,6 +112,36 @@ func fib2(n int) int {
 	}
 	_, out := multFib(a, b, ta, tb)
 	return out
+}
+
+func fibBig(n int64) *big.Int {
+	if n == 0 || n == 1 {
+		return big.NewInt(n)
+	}
+
+	a, b := big.NewInt(0), big.NewInt(1)
+	ta, tb := big.NewInt(1), big.NewInt(0)
+
+	for n > 1 {
+		if n&1 == 1 {
+			ta, tb = multFibBig(a, b, ta, tb)
+			n--
+		} else {
+			a, b = multFibBig(a, b, a, b)
+			n = n / 2
+		}
+	}
+	_, out := multFibBig(a, b, ta, tb)
+	return out
+}
+
+var o1, taa, tbb, o2, tab, ab, tbab = new(big.Int), new(big.Int), new(big.Int), new(big.Int), new(big.Int), new(big.Int), new(big.Int)
+
+func multFibBig(a, b, ta, tb *big.Int) (*big.Int, *big.Int) {
+	tbab.Mul(tb, ab.Add(a, b))
+	tab.Mul(ta, b)
+	return o1.Add(taa.Mul(ta, a), tbb.Mul(tb, b)), o2.Add(tab, tbab)
+
 }
 
 func fib(n int) int {
