@@ -33,13 +33,19 @@ func TestSquare33(t *testing.T) {
 
 func BenchmarkFib(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		fib(100000)
+		fib(100)
 	}
 }
 
 func BenchmarkFib2(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		fib2(100000)
+		fib2(100)
+	}
+}
+
+func BenchmarkFibBad(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		fibBad(10)
 	}
 }
 

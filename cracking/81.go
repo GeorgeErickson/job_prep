@@ -85,6 +85,10 @@ func fibBad(n int) int {
 	return fibBad(n-1) + fibBad(n-2)
 }
 
+func multFib(a, b, ta, tb int) (int, int) {
+	return ta*a + tb*b, ta*b + tb*(a+b)
+}
+
 func fib2(n int) int {
 	if n == 0 || n == 1 {
 		return n
@@ -95,14 +99,15 @@ func fib2(n int) int {
 
 	for n > 1 {
 		if n&1 == 1 {
-			ta, tb = ta*a+tb*b, ta*b+tb*(a+b)
+			ta, tb = multFib(a, b, ta, tb)
 			n--
 		} else {
-			a, b = a*a+b*b, a*b+b*(a+b)
+			a, b = multFib(a, b, a, b)
 			n = n / 2
 		}
 	}
-	return ta*b + tb*(a+b)
+	_, out := multFib(a, b, ta, tb)
+	return out
 }
 
 func fib(n int) int {
