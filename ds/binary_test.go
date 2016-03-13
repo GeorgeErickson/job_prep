@@ -22,6 +22,6 @@ func TestBinary(t *testing.T) {
 	assert.Equal(b.Pop(), 4)
 	assert.Equal([]int{5, 6, 7}, b.data)
 
-	b = NewMinBinary(randomIntList(100)...)
+	b = NewMinBinary(RandomIntList(100)...)
 	assert.True(sort.IntsAreSorted(b.Sorted()))
 }
