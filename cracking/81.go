@@ -105,10 +105,10 @@ func fib2(n int) int {
 		if i&1 == 1 {
 			ta, tb = ta*a+tb*b, ta*b+tb*(a+b)
 		}
-		a, b = a*a+b*b, a*b+b*(a+b)
+		a, b = a*a+b*b, b*(2*a+b)
 	}
 
-	return ta*b + tb*(a+b)
+	return b + a
 }
 
 func fibBig(n int64) *big.Int {
