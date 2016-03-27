@@ -10,20 +10,46 @@ func max(a, b int) int {
 	return b
 }
 
+func abs(a int) int {
+	if a < 0 {
+		a *= -1
+	}
+	return a
+}
+
 type Node struct {
 	V Value
 	l *Node
 	r *Node
 }
 
+func (n *Node) IsLeaf() bool {
+	return n.l == nil && n.r == nil
+}
+
 type WalkFn func(n *Node, out *[]Value)
 
-func (n *Node) Height() int {
+func (n *Node) childHeight() int {
 	if n == nil {
-		return -1
+		return 0
 	}
 
-	return 1 + max(n.l.Height(), n.r.Height())
+	return n.Height() + 1
+}
+
+func (n *Node) Height() int {
+
+	return max(n.l.childHeight(), n.r.childHeight())
+}
+
+func (n *Node) Each(fn func(n *Node)) {
+	if n == nil {
+		return
+	}
+
+	n.l.Each(fn)
+	fn(n)
+	n.r.Each(fn)
 }
 
 func InOrder(n *Node, out *[]Value) {

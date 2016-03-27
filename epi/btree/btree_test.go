@@ -22,9 +22,8 @@ func AssertSorted(t *testing.T, a []Value) {
 	}
 }
 
-func TestBtree(t *testing.T) {
-	// page 250
-	bt := &Node{19,
+func exampleTree() *Node {
+	return &Node{19,
 		&Node{7,
 			&Node{3,
 				&Node{2, nil, nil},
@@ -52,8 +51,37 @@ func TestBtree(t *testing.T) {
 			},
 		},
 	}
+}
+
+func TestBtree(t *testing.T) {
+	// page 250
+	bt := exampleTree()
 
 	AssertSorted(t, bt.Walk(InOrder))
 	assert := require.New(t)
 	assert.Equal(5, bt.Height())
+}
+
+func TestBtreeHeight(t *testing.T) {
+	// page 250
+	bt := &Node{47,
+		nil,
+		&Node{53, nil, nil},
+	}
+	assert := require.New(t)
+	assert.Equal(1, bt.Height())
+
+	assert.Equal(0, bt.r.Height())
+}
+
+func TestBtreeIsBalanced(t *testing.T) {
+	bt := &Node{47,
+		nil,
+		&Node{53, nil, nil},
+	}
+	assert := require.New(t)
+	assert.Equal(1, bt.Height())
+	assert.True(bt.IsBalanced())
+	bt.r.r = &Node{65, nil, nil}
+	assert.False(bt.IsBalanced())
 }
